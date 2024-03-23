@@ -22,7 +22,7 @@ npSocket.startServer(9999)
 
 # only set this flag to true if you have generated your bit file with a 
 # Vivado reference design for Simulink
-simulink = False
+simulink = True    
 if simulink == True:
     f1 = open("/dev/mem", "r+b")
     simulinkMem = mmap.mmap(f1.fileno(), 1000, offset=0x43c60000)
@@ -47,67 +47,19 @@ while(1):
     cmd = npSocket.receiveCmd()
     #print(cmd)
     if cmd == '0':
-        print "received frame from matlab"
         data = npSocket.receive()
-        reshaped = np.reshape(data,(480, 752,8))
-        print "writing frame to FPGA"
-        camWriter.setFrame(reshaped)
+        camWriter.setFrame(data)
+        npSocket.send(np.array(2))
     elif cmd == '1':
-        print "sending feedthrough frame to matlab"
         frameLeft,frameRight = camFeedthrough.getStereoGray()
         tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
         tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
         npSocket.send(tempImageLeft)
+        npSocket.send(tempImageRight)
     elif cmd == '2':
-        print "sending processed frames to matlab"
-        time.sleep(1)
-        frameLeft,frameRight = camProcessed.getStereoGrayFrame()
-        frameLeft,frameRight = camProcessed.getStereoGrayFrame()
-        frameLeft,frameRight = camProcessed.getStereoGrayFrame()
-        #frameLeft,frameRight = camProcessed.getStereoGray()
-        tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
-        tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
-        npSocket.send(tempImageLeft)
-        npSocket.send(tempImageRight) 
-    elif cmd == '3':
-        #print "sending raw frames to matlab"
-        frameLeft,frameRight = camFeedthrough.getStereoGray()
-        tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
-        tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
-        npSocket.send(tempImageLeft)
-        npSocket.send(tempImageRight) 
-    elif cmd == '4':
-        print "sending processed frames to matlab from camera"
-        camProcessed.setSource(0)
-        time.sleep(.5)
         frameLeft,frameRight = camProcessed.getStereoGray()
         tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
         tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
-        npSocket.send(tempImageLeft)
-        npSocket.send(tempImageRight) 
-    elif cmd == '5':  
-        t_lower = float(npSocket.receiveParam())
-        print(t_lower)
-        t_upper = float(npSocket.receiveParam())
-        print(t_upper)
-        frameLeft,frameRight = camFeedthrough.getStereoGray()
-        tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
-        tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
-        edge = cv2.Canny(tempImageLeft, t_lower, t_upper) 
-        #print(edge.dtype)
-        npSocket.send(edge)
-        npSocket.send(tempImageRight) 
-    elif cmd == '6':  
-        print "reading image from camera"
-        t_lower = float(npSocket.receiveParam())
-        #print(t_lower)
-        t_upper = float(npSocket.receiveParam())
-        #print(t_upper)
-        frameLeft,frameRight = camProcessed.getStereoGrayFrame()
-        tempImageLeft = np.ascontiguousarray(frameLeft, dtype=np.uint8) 
-        tempImageRight = np.ascontiguousarray(frameRight, dtype=np.uint8) 
-        #edge = cv2.Canny(tempImageLeft, t_lower, t_upper) 
-        #print(edge.dtype)
         npSocket.send(tempImageLeft)
         npSocket.send(tempImageRight) 
     else:
