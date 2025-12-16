@@ -19,7 +19,7 @@ print "entering main loop"
 # command structure that is setup in the Matlab side of things on the host PC.
 while(1):
     cmd = npSocket.receiveCmd()
-    #print(cmd)
+    print(cmd)
     if cmd == '0':
         print "received frame from matlab"
         data = npSocket.receive()
@@ -27,7 +27,7 @@ while(1):
         print "converted image"
     elif cmd == '2':
         print "sending processed frames to matlab"
-        time.sleep(1)
+        #time.sleep(1)
         leftGray = stereoImage[:,:,3]
         leftGray = np.ascontiguousarray(leftGray, dtype=np.uint8) 
         rightGray = stereoImage[:,:,7]
