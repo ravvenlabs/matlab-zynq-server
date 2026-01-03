@@ -1,4 +1,4 @@
-# Dr. Kaputa
+    # Dr. Kaputa
 # Matlab Server
 from numpysocket import NumpySocket
 import os
@@ -28,6 +28,8 @@ if simulink == True:
     f1 = open("/dev/mem", "r+b")
     simulinkMem = mmap.mmap(f1.fileno(), 1000, offset=0xa0060000)
     mv = memoryview(simulinkMem).cast('Q') 
+    mv[0] = 0x0000000000000001
+    mv[1] = 0x000001e0000002f0
     mv[0] = 0x0000000100000000
     
     # simulinkMem.seek(0) 
