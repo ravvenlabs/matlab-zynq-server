@@ -100,7 +100,8 @@ class NumpySocket():
         length = 360960*8
         frameBuffer = bytearray()
         while True:
-            data = socket.recv(socket_buffer_size)
+            #data = socket.recv(socket_buffer_size)
+            data = socket.recv(length)
             frameBuffer += data
             if len(frameBuffer) == length:
                 break
