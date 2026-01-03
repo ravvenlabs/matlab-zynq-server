@@ -23,7 +23,7 @@ npSocket.startServer(9999)
 
 # only set this flag to true if you have generated your bit file with a 
 # Vivado reference design for Simulink
-simulink = True    
+simulink = False    
 if simulink == True:
     f1 = open("/dev/mem", "r+b")
     simulinkMem = mmap.mmap(f1.fileno(), 1000, offset=0xa0060000)
