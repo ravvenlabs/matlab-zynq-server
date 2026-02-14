@@ -7,7 +7,10 @@ from io import BytesIO
 
 
 class NumpySocket():
-    def __init__(self):
+    def __init__(self,width,height,depth):
+        self.width = width
+        self.height = height
+        self.depth = depth
         self.address = 0
         self.port = 0
         self.client_connection = self.client_address = None
@@ -97,7 +100,8 @@ class NumpySocket():
             socket = self.client_connection
 
         #length = None
-        length = 360960*8
+        #length = 360960*8
+        length = self.width * self.height * self.depth
         frameBuffer = bytearray()
         while True:
             #data = socket.recv(socket_buffer_size)

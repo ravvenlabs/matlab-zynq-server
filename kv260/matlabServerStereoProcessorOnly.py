@@ -11,7 +11,15 @@ import sys, random
 import ctypes
 import copy
 
-npSocket = NumpySocket()
+#width = 752
+#height = 480
+#depth = 8
+
+width = 1080
+height = 720
+depth = 8
+
+npSocket = NumpySocket(width,height,depth)
 npSocket.startServer(9999)
 
 print("entering main loop")
@@ -23,7 +31,7 @@ while(1):
     if cmd == b'0':
         data = npSocket.receive()
         #print("received frame from matlab")
-        stereoImage = np.reshape(data,(480, 752,8))
+        stereoImage = np.reshape(data,(height,width,depth))
         #print("converted image")
     elif cmd == b'2':
         #print("sending processed frames to matlab")
