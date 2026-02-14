@@ -19,7 +19,7 @@ width = 1080
 height = 720
 depth = 8
 
-npSocket = NumpySocket(width,height,depth)
+npSocket = NumpySocket()
 npSocket.startServer(9999)
 
 print("entering main loop")
@@ -29,7 +29,7 @@ print("entering main loop")
 while(1):
     cmd = npSocket.receiveCmd()
     if cmd == b'0':
-        data = npSocket.receive()
+        data = npSocket.receive(width,height,depth)
         #print("received frame from matlab")
         stereoImage = np.reshape(data,(height,width,depth))
         #print("converted image")
