@@ -2,7 +2,6 @@
 # Matlab Zynq Server Demo
 
 from numpysocket import NumpySocket
-import cv2
 import numpy as np
 import time
 import mmap
